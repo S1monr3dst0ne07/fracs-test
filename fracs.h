@@ -26,6 +26,9 @@ uint64_t frac2value(frac x)
 
 uint64_t gcd(uint64_t a, uint64_t b)
 {
+    if (a == 0) return b;
+    if (b == 0) return a;
+
     while (a != b)
         if (a > b) a -= b;
         else       b -= a;
@@ -86,8 +89,12 @@ frac div(frac a, frac b)
     return mul(a, reci(b));
 }
 
-
-int main()
+bool comp(frac big, frac small)
 {
+    return !add(big, neg(small)).sign;
+}
 
+void print(frac x)
+{
+    printf("%lf\n", ((double)x.num / (double)x.den) * (x.sign ? -1 : 1));
 }
