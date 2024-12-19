@@ -7,8 +7,8 @@ int main()
     frac zero = value2frac(0);
 
     
-    const int iXmax = 500;
-    const int iYmax = 500;
+    const int iXmax = 200;
+    const int iYmax = 200;
         
     /*
     const double CxMin=-2;
