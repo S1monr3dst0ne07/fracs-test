@@ -5,7 +5,7 @@
 
 
 typedef uint32_t vint;
-#define SIGN_BIT (1 << (sizeof(vint)*8 - 1)) 
+#define SIGN_BIT (1 << 31) 
 
 typedef struct 
 {
@@ -28,51 +28,42 @@ double frac2value(frac x)
 {
     return ((double)x.num / x.den) * (x.sign ? -1 : 1);
 }
-
-vint gcd(uint64_t a, uint64_t b)
+void print(frac x)
 {
-    if ((a | b) == 0) return 1;
-    if (a == 0) return b;
-    if (b == 0) return a;
-
-    while (a != b)
-        if (a > b) a -= b;
-        else       b -= a;
-
-    return a ? a : 1;
+    printf("%lf\n", ((double)x.num / (double)x.den) * (x.sign ? -1 : 1));
 }
 
 frac normalize(frac x)
 {
-    vint f = gcd(x.num, x.den);
-    x.num /= f;
-    x.den /= f;
+    while ((x.num > 0xff) ||
+        (x.den > 0xff) )
+    {
+        x.num >>= 1;
+        x.den >>= 1;
+    }
 
     return x;
 }
 
 frac add(frac a, frac b)
 {
+    a.num *= b.den;
+    b.num *= a.den;
 
-    vint sharedNumA = a.num * b.den;
-    vint sharedNumB = b.num * a.den;
-    vint sharedDen  = a.den * b.den;
+    vint den = a.den * b.den;
 
-    assert((sharedNumA & SIGN_BIT) == 0);
-    assert((sharedNumA & SIGN_BIT) == 0);
+    if (a.sign) a.num *= -1;
+    if (b.sign) b.num *= -1;
 
-    if (a.sign) sharedNumA *= -1;
-    if (b.sign) sharedNumB *= -1;
+    vint num = a.num + b.num;
 
-    vint resultNum = sharedNumA + sharedNumB;
-
-    bool sign = (resultNum & SIGN_BIT) != 0;
-    if (sign) resultNum *= -1;
+    bool sign = (num & SIGN_BIT) != 0;
+    if (sign) num *= -1;
 
     return normalize((frac){
         .sign = sign,
-        .num  = resultNum,
-        .den  = sharedDen
+        .num  = num,
+        .den  = den
     });
 }
 
@@ -108,10 +99,6 @@ frac div(frac a, frac b)
 
 bool comp(frac big, frac small)
 {
-    return !add(big, neg(small)).sign;
+    return !(add(big, neg(small)).sign);
 }
 
-void print(frac x)
-{
-    printf("%lf\n", ((double)x.num / (double)x.den) * (x.sign ? -1 : 1));
-}
