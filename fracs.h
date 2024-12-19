@@ -35,8 +35,8 @@ void print(frac x)
 
 frac normalize(frac x)
 {
-    while ((x.num > 0xff) ||
-        (x.den > 0xff) )
+    while ((x.num > 0x8000) ||
+           (x.den > 0x8000) )
     {
         x.num >>= 1;
         x.den >>= 1;
