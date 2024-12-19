@@ -1,4 +1,4 @@
-
+#include <stdio.h>
 #include "fracs.h"
 
 
@@ -7,8 +7,8 @@ int main()
     frac zero = value2frac(0);
 
     
-    const int iXmax = 100;
-    const int iYmax = 100;
+    const int iXmax = 500;
+    const int iYmax = 500;
         
     /*
     const double CxMin=-2;
@@ -34,16 +34,14 @@ int main()
     frac PixelHeight = div(add(CyMax, neg(CyMin)), value2frac(iYmax));
 
 
-    const int maxIter=10;
+    const int maxIter=20;
 
     FILE* fp = fopen("new.ppm","wb");
     fprintf(fp,"P6\n %d\n %d\n 255\n", iXmax, iYmax);
 
-    //for(int iY=0; iY<iYmax; iY++)
-    //for(int iX=0; iX<iXmax; iX++)
+    for(int iY=0; iY<iYmax; iY++)
+    for(int iX=0; iX<iXmax; iX++)
     {   
-        int iX = 100;
-        int iY = 100;
         /*
         double Cx=CxMin + iX*PixelWidth;
         double Cy=CyMin + iY*PixelHeight;
@@ -51,17 +49,8 @@ int main()
         frac marX = mul(PixelWidth,  value2frac(iX));
         frac marY = mul(PixelHeight, value2frac(iY));
 
-        print(marX);
-        print(marY);
-
-        print(CxMin);
-        print(CyMin);
-
         frac Cx = add(CxMin, marX);
         frac Cy = add(CyMin, marY);
-
-        print(Cx);
-        print(Cy);
 
 
         /*
@@ -75,19 +64,19 @@ int main()
         frac Zy  = zero;
         frac Zx2 = zero;
         frac Zy2 = zero;
-        
+
+
 
         int iter = 0;
         //for (; iter < maxIter && ((Zx2+Zy2) < 4.0); iter++)
         for (; iter < maxIter && comp(value2frac(4), add(Zx2, Zy2)); iter++)
         {
-            //printf("%d %d\n", Zy, Zx);
             Zy = add(mul(mul(Zx, Zy), value2frac(2)), Cy);
             Zx = add(add(Zx2, neg(Zy2)), Cx);
             Zx2 = mul(Zx, Zx);
             Zy2 = mul(Zy, Zy);
             
-        };
+        }
                 
         double gray = ((double)iter / maxIter) * 255.0;
 
