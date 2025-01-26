@@ -7,8 +7,8 @@ int main()
     frac zero = value2frac(0);
 
     
-    const int iXmax = 200;
-    const int iYmax = 200;
+    const int iXmax = 10;
+    const int iYmax = 10;
         
     /*
     const double CxMin=-2;
@@ -40,8 +40,12 @@ int main()
     fprintf(fp,"P6\n %d\n %d\n 255\n", iXmax, iYmax);
 
     for(int iY=0; iY<iYmax; iY++)
+    {
     for(int iX=0; iX<iXmax; iX++)
     {   
+        iX = 3;
+        iY = 3;
+
         /*
         double Cx=CxMin + iX*PixelWidth;
         double Cy=CyMin + iY*PixelHeight;
@@ -75,8 +79,16 @@ int main()
             Zx = add(add(Zx2, neg(Zy2)), Cx);
             Zx2 = mul(Zx, Zx);
             Zy2 = mul(Zy, Zy);
+
+            print(Zy);
+            print(Zx);
             
         }
+        printf("%d\n", iter);
+
+        if (iter == maxIter) printf("A");
+        else                 printf(".");
+        exit(0);
                 
         double gray = ((double)iter / maxIter) * 255.0;
 
@@ -86,6 +98,8 @@ int main()
         colors[2]=(int)gray;
 
         fwrite(colors, 1, 3, fp);
+    }
+        printf("\n");
     }
 
     fclose(fp);
