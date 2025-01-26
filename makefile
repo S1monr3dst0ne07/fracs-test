@@ -3,8 +3,11 @@
 
 default: build run
 
-build: mandel.c
-	gcc -g mandel.c -o mandel
+build:
+	gcc -g main.c -o main
 
 run:
-	./mandel
+	./main
+
+view:
+	feh -R 0.5 new.ppm -Z --force-aliasing
