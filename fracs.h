@@ -4,8 +4,8 @@
 #include <assert.h>
 
 
-typedef uint32_t vint;
-#define SIGN_BIT (1 << 31) 
+typedef uint16_t vint;
+#define SIGN_BIT (1 << (sizeof(vint)*8-1)) 
 
 typedef struct 
 {
@@ -30,17 +30,19 @@ double frac2value(frac x)
 }
 void print(frac x)
 {
-    printf("%lf\n", ((double)x.num / (double)x.den) * (x.sign ? -1 : 1));
+    //printf("%lf\n", ((double)x.num / (double)x.den) * (x.sign ? -1 : 1));
+    printf("%c%d/%d\n", (x.sign ? '-' : '+'), x.num, x.den);
 }
 
 frac normalize(frac x)
 {
-    while ((x.num > 0x8000) ||
-           (x.den > 0x8000) )
+    while ((x.num > 0x80) ||
+           (x.den > 0x80) )
     {
         x.num >>= 1;
         x.den >>= 1;
     }
+
 
     return x;
 }
